@@ -1,0 +1,65 @@
+
+using Domain.Contracs;
+using Microsoft.EntityFrameworkCore;
+using Presistence.Data.DataSeed;
+using Presistence.Data.Dbcontexts;
+
+namespace E_Commerce.API
+{
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            #region  Add services to the container
+
+            
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<StoreDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+            // DataSeeding
+            builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+
+
+            #endregion
+
+
+            var app = builder.Build();
+
+            //Pending Migration ÂÌŒ‘ Â‰« »—œÊ ⁄‘«‰ Ì‘Ê› ·Ê ›ÌÂ «Ì  run ﬂ· „« «·«»·ﬂÌ‘‰ Ì⁄„·
+            #region DataSeed
+            // DataSeed() «··Ì ÃÊ«Â« «·· ÂÌÂ Method Â—ÊÕ «ﬁ—«¡ «·œ« « „‰ «· DataSeeding Ê„‰ «· DataSeeding Ê„‰Â« ÂÊ’· · GetRequiredService<IDataSeeding>() ⁄‘«‰ «Ê’· · Create Scope  »⁄„·
+            using var scope = app.Services.CreateScope();
+            var ObjectOfDataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
+            await ObjectOfDataSeeding.DataSeedAsync();
+
+
+            #endregion
+            // Configure the HTTP request pipeline.
+
+            #region Configure the HTTP request pipeline.
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.MapControllers();
+
+            #endregion
+
+            app.Run();
+        }
+    }
+}
