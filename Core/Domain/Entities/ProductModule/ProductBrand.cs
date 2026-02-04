@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain.Entities.ProductModule
+{
+    public class ProductBrand : BaseEntity<int>
+    {
+        public string Name { get; set; } = default!;
+
+        #region RelathioShip
+
+        // Product (m) -- Brand (1)
+
+        public ICollection<Product> Products { get; set; }
+
+        #endregion
+    }
+}
