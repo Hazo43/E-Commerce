@@ -3,6 +3,7 @@ using Domain.Contracs;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data.DataSeed;
 using Presistence.Data.Dbcontexts;
+using Presistence.UnitOfWork;
 
 namespace E_Commerce.API
 {
@@ -27,7 +28,7 @@ namespace E_Commerce.API
             });
             // DataSeeding
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
-
+            builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
 
             #endregion
 
