@@ -5,6 +5,8 @@ using Presistence.Data.DataSeed;
 using Presistence.Data.Dbcontexts;
 using Presistence.UnitOfWork;
 using Services;
+using Services.Abstractions.Contracts;
+using Services.ImplementationService;
 
 namespace E_Commerce.API
 {
@@ -33,6 +35,8 @@ namespace E_Commerce.API
             builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
             // AutoMapper
             builder.Services.AddAutoMapper(cfg => { }, typeof(AssembluReference).Assembly);
+            // ServiceManager
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
             #endregion
 
 
