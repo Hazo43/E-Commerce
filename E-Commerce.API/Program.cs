@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Presistence.Data.DataSeed;
 using Presistence.Data.Dbcontexts;
 using Presistence.UnitOfWork;
+using Services;
 
 namespace E_Commerce.API
 {
@@ -28,8 +29,10 @@ namespace E_Commerce.API
             });
             // DataSeeding
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+            // UnitOfEork
             builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
-
+            // AutoMapper
+            builder.Services.AddAutoMapper(cfg => { }, typeof(AssembluReference).Assembly);
             #endregion
 
 
