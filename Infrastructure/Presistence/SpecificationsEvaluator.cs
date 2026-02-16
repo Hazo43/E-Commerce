@@ -34,6 +34,8 @@ namespace Presistence
                     //    Query = Query.Include(expression);
                     //}
 
+                    // dbcontext.Products.Include(p => p.ProductBrand)
+                    // dbcontext.Products.Include(p => p.ProductBrand).Include(P => P.productType);
                     Query = specifications.IncludeExpressions.Aggregate(Query,
                           (CurrentQuery, IncludeExp) => CurrentQuery.Include(IncludeExp));
                 }

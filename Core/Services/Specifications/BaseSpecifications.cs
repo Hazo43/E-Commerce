@@ -15,9 +15,9 @@ namespace Services.Specifications
     {
         #region Criteria
 
-        public Expression<Func<TEntity, bool>> Criteria { get; private set; }
+        public Expression<Func<TEntity, bool>>? Criteria { get; private set; }
         // where عشان اجبر كلو يستخدم ال constractor عملتها جوا
-        protected BaseSpecifications(Expression<Func<TEntity, bool>> criteriaExpression)
+        protected BaseSpecifications(Expression<Func<TEntity, bool>>? criteriaExpression)
         {
             Criteria = criteriaExpression;
         }

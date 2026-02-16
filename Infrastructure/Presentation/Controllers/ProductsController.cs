@@ -19,6 +19,7 @@ namespace Presentation.Controllers
         {
             _serviceManager = serviceManager;
         }
+    
         // EndPoint => Get AllProduct 
         // Get : BaseUrl/api/Products
         [HttpGet]
@@ -27,6 +28,7 @@ namespace Presentation.Controllers
             var products = await _serviceManager.ProductService.GetAllProductsAsync();
             return Ok(products);
         }
+    
         // EndPoint => Get AllBrands
         // Get : BaseUrl/api/Products/Brands
         [HttpGet("Brands")]
@@ -35,6 +37,7 @@ namespace Presentation.Controllers
             var brands = await _serviceManager.ProductService.GetAllBrandsAsync();
             return Ok(brands);
         }
+       
         // EndPoint => Get AllTypes
         // Get : BaseUrl/api/Products/Types
         [HttpGet("Types")]
@@ -44,6 +47,7 @@ namespace Presentation.Controllers
             return Ok(types);
         }
         [HttpGet("{id:int}")]
+       
         // EndPoint => Get ProductById
         // Get : BaseUrl/api/Products/Id
         public async Task<ActionResult<ProductResultDto>> GetProductByIdAsync(int id)

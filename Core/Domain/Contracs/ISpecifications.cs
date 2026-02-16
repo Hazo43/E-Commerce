@@ -11,7 +11,7 @@ namespace Domain.Contracs
     public interface ISpecifications<TEntity , TKey> where TEntity : BaseEntity<TKey>
     {
         // Signature for Property [ Expression ==> Where ]
-        public Expression<Func<TEntity , bool>> Criteria { get; }
+        public Expression<Func<TEntity , bool>>? Criteria { get; }
 
         // Signature for Property [ Expression ==> Include ]
         //-> Include(P => p.ProductType).Include( p => p.ProductBrand);
