@@ -23,9 +23,9 @@ namespace Presentation.Controllers
         // EndPoint => Get AllProduct 
         // Get : BaseUrl/api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductResultDto>>> GetAllProductAsync()
+        public async Task<ActionResult<IEnumerable<ProductResultDto>>> GetAllProductAsync(int? typeId , int? brandId)
         {
-            var products = await _serviceManager.ProductService.GetAllProductsAsync();
+            var products = await _serviceManager.ProductService.GetAllProductsAsync(typeId , brandId);
             return Ok(products);
         }
     

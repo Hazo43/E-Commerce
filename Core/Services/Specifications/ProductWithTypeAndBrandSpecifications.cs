@@ -10,9 +10,11 @@ namespace Services.Specifications
     internal class ProductWithTypeAndBrandSpecifications : BaseSpecifications<Product , int>
     {
         // Get All Product => Include (ProductType , ProductBrand)
-        public ProductWithTypeAndBrandSpecifications() : base(null)
+        public ProductWithTypeAndBrandSpecifications(int? typeId, int? brandId)
+            : base( p => (!typeId.HasValue || p.TypeId == typeId) && 
+                         (!brandId.HasValue || p.BrandId == brandId))
         {
-            AddInclude(p => p.ProductBrand);
+            AddInclude(p => p.ProductBrand); 
             AddInclude(p => p.productType);
         }
 
