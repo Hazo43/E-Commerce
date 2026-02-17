@@ -34,5 +34,23 @@ namespace Services.Specifications
         }
 
         #endregion
+
+        #region Sorting ( OrderBy , OrderByDescending)
+       
+        // OrderBy
+        public Expression<Func<TEntity, object>> OrderBy {get; private set;}
+
+        protected void AddOrderBy (Expression<Func<TEntity , object>> orderByExpression)
+        {
+            OrderBy = orderByExpression;
+        }
+      
+        // OrderByDescending
+        public Expression<Func<TEntity, object>> OrderByDescending { get; private set; }
+        protected void AddOrderByDescending(Expression<Func<TEntity, object>> orderByDescendingExpression)
+        {
+            OrderByDescending = orderByDescendingExpression;
+        }
+        #endregion
     }
 }

@@ -23,6 +23,14 @@ namespace Presistence
                  // Criteria => Where
                 if (specifications.Criteria is not null)
                     Query = Query.Where(specifications.Criteria);
+                
+                // OrderBy
+                if(specifications.OrderBy is not null)
+                    Query = Query.OrderBy(specifications.OrderBy);
+             
+                // OrderByDescending
+                if(specifications.OrderByDescending is not null)
+                    Query = Query.OrderByDescending(specifications.OrderByDescending);
 
                 // Inclide
                 // و لو فيه اي عنصر روح اعمل اللي بقولك عليه null لو مش ب 

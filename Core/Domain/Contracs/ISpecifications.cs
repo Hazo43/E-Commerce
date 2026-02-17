@@ -16,5 +16,9 @@ namespace Domain.Contracs
         // Signature for Property [ Expression ==> Include ]
         //-> Include(P => p.ProductType).Include( p => p.ProductBrand);
         public List<Expression<Func<TEntity , object>>> IncludeExpressions {  get; }
+
+        // OrderBy , OrderByDescending
+        public Expression<Func<TEntity,object>> OrderBy { get;  }
+        public Expression<Func<TEntity,object>> OrderByDescending { get;  }
     }
 }
