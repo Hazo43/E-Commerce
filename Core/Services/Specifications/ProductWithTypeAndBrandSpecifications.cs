@@ -13,8 +13,9 @@ namespace Services.Specifications
     {
         // Get All Product => Include (ProductType , ProductBrand)
         public ProductWithTypeAndBrandSpecifications(ProductSpecificationsParameters parameters)
-            : base( p => (!parameters.typeId.HasValue || p.TypeId == parameters.typeId) && 
-                         (!parameters.brandId.HasValue || p.BrandId == parameters.brandId))  
+            : base( p => (!parameters.typeId.HasValue || p.TypeId == parameters.typeId) &&  // type
+                         (!parameters.brandId.HasValue || p.BrandId == parameters.brandId) && // brand
+                         ( string.IsNullOrEmpty(parameters.Search) || p.Name.ToLower().Contains(parameters.Search.ToLower())))  // Search
         {
             AddInclude(p => p.ProductBrand); 
             AddInclude(p => p.productType);
