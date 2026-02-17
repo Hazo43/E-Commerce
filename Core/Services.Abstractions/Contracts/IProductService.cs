@@ -1,4 +1,5 @@
-﻿using Shared.DTOs;
+﻿using Shared;
+using Shared.DTOs;
 using Shared.Enums;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Services.Abstractions.Contracts
     {
        
         // GetAllProduct
-        Task<IEnumerable<ProductResultDto>> GetAllProductsAsync(int? typeId , int? brandId , ProductSortingOptions sort);
+        Task<IEnumerable<ProductResultDto>> GetAllProductsAsync(ProductSpecificationsParameters parameters);
         
         // GetAllBrands
         Task<IEnumerable<BrandResultDto>> GetAllBrandsAsync();
