@@ -48,6 +48,11 @@ namespace Presistence.Repositories
             return await SpecificationsEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specifications).FirstOrDefaultAsync();
         }
 
+        public async Task<int> ConutAsync(ISpecifications<TEntity, TKey> specifications)
+        {
+            return await SpecificationsEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specifications).CountAsync();
+        }
+
         #endregion
     }
 }

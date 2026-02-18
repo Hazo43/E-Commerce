@@ -9,32 +9,47 @@ namespace Shared
 {
     public class ProductSpecificationsParameters
     {
-        private const int defaultPageSize = 5;
-        private const int maxPageSize = 10;
+
 
         public int? typeId { get; set; }
         public int? brandId { get; set; }
         public ProductSortingOptions sort {  get; set; }
         public string? Search { get; set; }
 
-        public int PageIndex { get; set; }
+        // Skip
+        private int _pageIndex { get; set; } = 1;
+        public int PageIndex
+        {
+            get
+            {
+                return _pageIndex;
+            }
+            set
+            {
+                //  عادي value  رجع ال ( 1)  لو اكبر من الصفر رجع ال value <= 0 لو 
+                _pageIndex = (value <= 0) ? 1 : value;
+            }
+        }
+         
+        // Take
+
+        private const int defaultPageSize = 5;
+        private const int maxPageSize = 10;
 
         private int _pageSize = defaultPageSize;
-
         public int pageSize 
         {
             get { return _pageSize ; }
-            // عادي value غير كدا هنحط ال maxPageSize هنحط ال maxPageSize اكبر من ال value لو ال
-            set { _pageSize = value > maxPageSize ? maxPageSize : value; }
-
-            // دي صح بردو
-            //set
-            //{
-            //    if (value > maxPageSize)
-            //        _pageSize = maxPageSize;
-            //    else
-            //        _pageSize = value;
-            //}
+           
+            set 
+            {
+                if (value <= 0)
+                    _pageIndex = defaultPageSize;
+                else if (value > maxPageSize)
+                    _pageSize = maxPageSize;
+                else
+                    _pageSize = value;
+            }
 
         }
 

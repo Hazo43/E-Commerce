@@ -13,7 +13,7 @@ namespace Services.Abstractions.Contracts
     {
        
         // GetAllProduct
-        Task<IEnumerable<ProductResultDto>> GetAllProductsAsync(ProductSpecificationsParameters parameters);
+        Task<PaginatedResult<ProductResultDto>> GetAllProductsAsync(ProductSpecificationsParameters parameters);
         
         // GetAllBrands
         Task<IEnumerable<BrandResultDto>> GetAllBrandsAsync();
