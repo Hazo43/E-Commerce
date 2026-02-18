@@ -47,10 +47,28 @@ namespace Services.Specifications
       
         // OrderByDescending
         public Expression<Func<TEntity, object>> OrderByDescending { get; private set; }
+
         protected void AddOrderByDescending(Expression<Func<TEntity, object>> orderByDescendingExpression)
         {
             OrderByDescending = orderByDescendingExpression;
         }
+        #endregion
+
+        #region PAgination [ Take - Skip ]
+
+        public int Skip {get ; private set;}
+
+        public int Take { get; private set; }
+
+        public bool IsPaginated { get; private set; }
+        
+        protected void ApplyPagination ( int pageSize, int pageIndex )
+        {
+            IsPaginated = true;
+            Take = pageSize;
+            Skip = (pageIndex - 1) * pageSize;
+        }
+
         #endregion
     }
 }

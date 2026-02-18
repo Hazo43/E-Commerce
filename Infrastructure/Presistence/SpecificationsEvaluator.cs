@@ -48,6 +48,11 @@ namespace Presistence
                           (CurrentQuery, IncludeExp) => CurrentQuery.Include(IncludeExp));
                 }
 
+                // Pagination [ Take - Skip ] 
+                if(specifications.IsPaginated) // و عاوز يستخدمها IsPaginated معناها ان هو وصل ل true لو ب
+                {
+                    Query = Query.Skip(specifications.Skip).Take(specifications.Take);
+                }
             }
             return Query;
 

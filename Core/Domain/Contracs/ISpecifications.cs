@@ -20,5 +20,10 @@ namespace Domain.Contracs
         // OrderBy , OrderByDescending
         public Expression<Func<TEntity,object>> OrderBy { get;  }
         public Expression<Func<TEntity,object>> OrderByDescending { get;  }
+
+        // Pagination [ Skip - Take ] 
+        public int Skip { get; } // PageIndex
+        public int Take { get; } // PageSize
+        public bool IsPaginated { get; } // ولا لا Pagination دي خاصه عشان نعرف الفرونت اند عاوز يستخدم ال
     }
 }

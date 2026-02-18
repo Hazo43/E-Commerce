@@ -38,6 +38,9 @@ namespace Services.Specifications
                     break;
 
             }
+
+            // Pagination 
+            ApplyPagination(parameters.pageSize, parameters.PageIndex);
         }
 
         // Get Product By Id (int id ) => Include Type , Brand [Include] . Where [Crietria]
