@@ -1,4 +1,5 @@
-﻿using Shared.ErrorModels;
+﻿using Domain.Exceptions;
+using Shared.ErrorModels;
 
 namespace E_Commerce.API.MiddleWares
 {
@@ -26,12 +27,17 @@ namespace E_Commerce.API.MiddleWares
                 await HandleExceptionAsync(context , ex);
             }
         }
-
+        // هيخش يتعامل من هنا service اي ايرور ف ال
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             //1] change StatusCode
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError; 
-           
+            //context.Response.StatusCode = StatusCodes.Status500InternalServerError; 
+            context.Response.StatusCode = ex switch
+            {
+                NotFoundException => StatusCodes.Status404NotFound,
+                (_) => StatusCodes.Status500InternalServerError,
+            };
+
             //2] change Content Type
             context.Response.ContentType = "application/json";
 
