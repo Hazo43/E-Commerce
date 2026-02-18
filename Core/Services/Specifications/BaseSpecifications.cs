@@ -54,7 +54,7 @@ namespace Services.Specifications
         }
         #endregion
 
-        #region PAgination [ Take - Skip ]
+        #region Pagination [ Take - Skip ]
 
         public int Skip {get ; private set;}
 

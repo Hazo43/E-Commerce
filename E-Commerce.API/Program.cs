@@ -1,5 +1,6 @@
 
 using Domain.Contracs;
+using E_Commerce.API.MiddleWares;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data.DataSeed;
 using Presistence.Data.Dbcontexts;
@@ -51,9 +52,14 @@ namespace E_Commerce.API
 
 
             #endregion
+
+
             // Configure the HTTP request pipeline.
 
             #region Configure the HTTP request pipeline.
+
+            // Midleware ==> Handle Exception
+            app.UseMiddleware<GlobalExceptionHandlingMiddleWare>();
 
             if (app.Environment.IsDevelopment())
             {
