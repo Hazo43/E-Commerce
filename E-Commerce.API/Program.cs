@@ -1,5 +1,6 @@
 
 using Domain.Contracs;
+using E_Commerce.API.Extensions;
 using E_Commerce.API.Factories;
 using E_Commerce.API.MiddleWares;
 using Microsoft.AspNetCore.Mvc;
@@ -17,55 +18,34 @@ namespace E_Commerce.API
     {
         public static async Task Main(string[] args)
         {
+            #region DI Container
+
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            #region  Add services to the container
+            // WepApi Services ==> WepApiServices Ïí method áæÍÏåÇ áæ ÚæÒÊ ÇÖíİ Çí ÍÊÌå ÇÖíİ İí Çámethod ÚãáÊåÇ İí WepApi Services Çí ÍÇÌå ÊÈÚ Çá
+            builder.Services.WepApiServices();
 
-            
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            // validation Error
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = ApiResponseFactory.CustomValidationErrorResponse;
-            });
-            builder.Services.AddDbContext<StoreDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-            // DataSeeding
-            builder.Services.AddScoped<IDataSeeding, DataSeeding>();
-            // UnitOfEork
-            builder.Services.AddScoped<IUnitOfWork , UnitOfWork>();
-            // AutoMapper
-            builder.Services.AddAutoMapper(cfg => { }, typeof(AssembluReference).Assembly);
-            // ServiceManager
-            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            // Infrastructure Services ==> AddInfrastructureServices Ïí method áæÍÏåÇ áæ ÚæÒÊ ÇÖíİ Çí ÍÊÌå ÇÖíİ İí Çámethod ÚãáÊåÇ İí Infrastructure Services Çí ÍÇÌå ÊÈÚ Çá
+            builder.Services.AddInfrastructureServices(builder.Configuration);
+
+            // Core Services ==> AddCoreService Ïí method áæÍÏåÇ áæ ÚæÒÊ ÇÖíİ Çí ÍÊÌå ÇÖíİ İí Çámethod ÚãáÊåÇ İí Core Services Çí ÍÇÌå ÊÈÚ Çá
+            builder.Services.AddCoreService();
+
+
             #endregion
-
 
             var app = builder.Build();
+            // DataSeeding åíå Çááí ÔÇíáå Çá SeedDatabaseAsync Ïí  method Çá
+            await app.SeedDatabaseAsync();
 
-            //Pending Migration åíÎÔ åäÇ ÈÑÏæ ÚÔÇä íÔæİ áæ İíå Çí  run ßá ãÇ ÇáÇÈáßíÔä íÚãá
-            #region DataSeed
-            // DataSeed() Çááí ÌæÇåÇ Çáá åíå Method åÑæÍ ÇŞÑÇÁ ÇáÏÇÊÇ ãä Çá DataSeeding æãä Çá DataSeeding æãäåÇ åæÕá á GetRequiredService<IDataSeeding>() ÚÔÇä ÇæÕá á Create Scope  ÈÚãá
-            using var scope = app.Services.CreateScope();
-            var ObjectOfDataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-            await ObjectOfDataSeeding.DataSeedAsync();
-
-
-            #endregion
 
 
             // Configure the HTTP request pipeline.
 
-            #region Configure the HTTP request pipeline.
+            #region Pipelines - MiddleWares.
 
             // Midleware ==> Handle Exception
-            app.UseMiddleware<GlobalExceptionHandlingMiddleWare>();
+            app.UseExceptionHandleMiddleWares();
 
             if (app.Environment.IsDevelopment())
             {
