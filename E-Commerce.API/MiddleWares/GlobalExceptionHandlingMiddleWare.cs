@@ -15,11 +15,14 @@ namespace E_Commerce.API.MiddleWares
         }
 
         public async Task InvokeAsync(HttpContext context)
-         {
+        {
 
             try
             {
                 await _next(context);
+                // وهيخش ع اللي بعدها _next  غلط غير كدا هيخش علUrl غير لو if هو مش هيخش هنا في ال
+                if (context.Response.StatusCode == StatusCodes.Status404NotFound)
+                    await HandleNotFoundApi(context);
             }
             catch(Exception ex)  
             {
@@ -27,6 +30,19 @@ namespace E_Commerce.API.MiddleWares
                 await HandleExceptionAsync(context , ex);
             }
         }
+
+        // Error Api Not Found
+        private async Task HandleNotFoundApi(HttpContext context)
+        {
+            context.Response.ContentType = "application/json";
+            var response = new ErrorDetails()
+            {
+                StatusCode = StatusCodes.Status404NotFound,
+                ErrorMessage = $"The EndPoind With Url {context.Request.Path} Not Found" // Request اللي هو بيبعتو في ال Url دي بتجيب ال context.Request.Path
+            };
+             await context.Response.WriteAsJsonAsync(response);
+        }
+
         // هيخش يتعامل من هنا service اي ايرور ف ال
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
