@@ -14,9 +14,8 @@ using System.Threading.Tasks;
 namespace Presentation.Controllers
 {
  
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+  
+    public class ProductsController : ApiController
     {
         private readonly IServiceManager _serviceManager;
         public ProductsController(IServiceManager serviceManager)
@@ -52,9 +51,6 @@ namespace Presentation.Controllers
         }
 
         [ProducesResponseType(typeof(ProductResultDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(ErrorDetails), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationErrorResponse), StatusCodes.Status400BadRequest)]
         // EndPoint => Get ProductById
         // Get : BaseUrl/api/Products/Id
         [HttpGet("{id:int}")]

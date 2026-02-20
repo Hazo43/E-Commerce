@@ -33,9 +33,8 @@ namespace Presistence.Repositories
         }
 
         public Task<bool> DeleteBasketAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
+             => _database.KeyDeleteAsync(id);
+        
 
         public async Task<CustomerBasket?> GetBasketByIdAsync(string id)
         {
