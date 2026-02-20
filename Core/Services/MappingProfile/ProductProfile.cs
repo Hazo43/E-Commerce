@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities.ProductModule;
-using Shared.DTOs;
+using Shared.DTOs.NewFolder.ProductModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;

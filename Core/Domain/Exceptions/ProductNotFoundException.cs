@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Exceptions
 {
-    public class ProductNotFoundException : NotFoundException
+    // عشان محدش يعرف يورث منو sealed دي
+    public sealed class ProductNotFoundException : NotFoundException
     {
         public ProductNotFoundException(int id)
             : base($"Product With Id {id} Not Found")
