@@ -14,7 +14,7 @@ namespace Presistence.Identity.DbContext
         public IdentityStoreDbContext(DbContextOptions<IdentityStoreDbContext> options) : base(options)
         {
         }
-
+ 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
