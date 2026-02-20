@@ -1,7 +1,9 @@
 ﻿using Domain.Contracs;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data.DataSeed;
 using Presistence.Data.Dbcontexts;
+using Presistence.Identity.DbContext;
 using Presistence.Repositories;
 using Presistence.UnitOfWork;
 using StackExchange.Redis;
@@ -13,9 +15,15 @@ namespace E_Commerce.API.Extensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services , IConfiguration configuration)
         {
+            // StoreDbContext
             services.AddDbContext<StoreDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
+            // IdentityDbContext
+            services.AddDbContext<IdentityStoreDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
             });
             // DataSeeding
             services.AddScoped<IDataSeeding, DataSeeding>();
