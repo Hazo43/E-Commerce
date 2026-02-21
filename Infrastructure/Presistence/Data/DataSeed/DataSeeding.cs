@@ -1,5 +1,7 @@
 ﻿using Domain.Contracs;
+using Domain.Entities.IdentityModule;
 using Domain.Entities.ProductModule;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data.Dbcontexts;
 using System.Text.Json;
@@ -12,10 +14,16 @@ namespace Presistence.Data.DataSeed
     {
 
         private readonly StoreDbContext _dbContext;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<User> _userManager;
 
-        public DataSeeding(StoreDbContext dbContext)
+        public DataSeeding(StoreDbContext dbContext ,
+                           RoleManager<IdentityRole> roleManager ,
+                           UserManager<User> userManager)
         {
             _dbContext = dbContext;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
 
@@ -76,6 +84,49 @@ namespace Presistence.Data.DataSeed
             
         }
 
+        public async Task SeedIdentityDataAsync()
+        {
+             try
+             {
+                //1] Seed Roles [ Admin , SuperAdmin]
+                if(! _roleManager.Roles.Any()) // seed لو مفهوش اي داتا روح اعمل
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                    await _roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
+                }
+                
+                //2] Seed Users [ UserAdmin , UserSuperAdmin ]
+                if(! _userManager.Users.Any())// seed لو مفهوش اي داتا روح اعمل
+                {
+                    var adminUser = new User()
+                    {
+                        DisplayName = "Ali",
+                        UserName = "Ali",
+                        Email = "Ali@gmail.com",
+                        PhoneNumber = "01234567891"
+                    };
+                    var superAdminUser = new User()
+                    {
+                        DisplayName = "Hazo",
+                        UserName = "Hazo",
+                        Email = "Hazo@gmail.com",
+                        PhoneNumber = "01234567881"
+                    };
+                     // اللي عندنا user ل ال Create بنعمل
+                     await _userManager.CreateAsync(adminUser, "P@ssw0rd");
+                     await _userManager.CreateAsync(superAdminUser, "P@ssw0rd");
 
+                    //3] Assign Roles ==> Users   معينه Role هخلي كل واحد عندو
+                    await _userManager.AddToRoleAsync(adminUser, "Admin");
+                    await _userManager.AddToRoleAsync(superAdminUser, "SuperAdmin");
+                }
+
+
+            }
+            catch (Exception ex)
+             {
+                throw;
+             }
+        }
     }
 }
