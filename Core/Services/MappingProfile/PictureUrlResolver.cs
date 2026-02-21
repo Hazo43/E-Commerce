@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Entities.ProductModule;
 using Microsoft.Extensions.Configuration;
-using Shared.DTOs.NewFolder.ProductModule;
+using Shared.DTOs.ProductModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;

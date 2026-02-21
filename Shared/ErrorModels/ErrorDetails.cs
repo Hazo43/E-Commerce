@@ -9,6 +9,7 @@ namespace Shared.ErrorModels
     public class ErrorDetails
     {
         public int StatusCode { get; set; }
-        public String ErrorMessage { get; set; } = string.Empty;
+        public string ErrorMessage { get; set; } = string.Empty;
+        public IEnumerable<string>? Errors { get; set; }
     }
 }

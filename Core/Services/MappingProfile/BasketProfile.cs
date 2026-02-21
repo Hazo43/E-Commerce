@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities.BasketModule;
 using Shared.DTOs.BasketModule;
-using Shared.DTOs.NewFolder.BasketModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,6 @@
 ﻿using Domain.Exceptions;
 using Shared.ErrorModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace E_Commerce.API.MiddleWares
 {
@@ -46,24 +47,32 @@ namespace E_Commerce.API.MiddleWares
         // هيخش يتعامل من هنا service اي ايرور ف ال
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-            //1] change StatusCode
-            //context.Response.StatusCode = StatusCodes.Status500InternalServerError; 
+           
+            context.Response.ContentType = "application/json";
+
+            
+            var response = new ErrorDetails()
+            {
+                ErrorMessage = ex.Message
+            };
+
             context.Response.StatusCode = ex switch
             {
                 NotFoundException => StatusCodes.Status404NotFound,
+                UnauthorizedException => StatusCodes.Status401Unauthorized,
+                VlaidationException validationException => HandleValidationException(validationException, response),
                 (_) => StatusCodes.Status500InternalServerError,
             };
 
-            //2] change Content Type
-            context.Response.ContentType = "application/json";
-
-            //3] Write Response in body 
-            var response = new ErrorDetails()
-            {
-                StatusCode = context.Response.StatusCode,
-                ErrorMessage = ex.Message
-            };
+            response.StatusCode = context.Response.StatusCode;
+                         
             await context.Response.WriteAsJsonAsync(response);
+        }
+
+        private int HandleValidationException(VlaidationException validationException, ErrorDetails response)
+        {
+            response.Errors = validationException.Errors;
+            return StatusCodes.Status404NotFound;
         }
     }
 }

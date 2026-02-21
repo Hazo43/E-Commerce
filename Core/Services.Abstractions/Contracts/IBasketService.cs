@@ -1,4 +1,4 @@
-﻿using Shared.DTOs.NewFolder.BasketModule;
+﻿using Shared.DTOs.BasketModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;

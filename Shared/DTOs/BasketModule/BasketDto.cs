@@ -1,11 +1,10 @@
-﻿using Shared.DTOs.BasketModule;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.DTOs.NewFolder.BasketModule
+namespace Shared.DTOs.BasketModule
 {
     public record BasketDto
     {

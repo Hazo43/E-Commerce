@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.DTOs.NewFolder.ProductModule
+namespace Shared.DTOs.ProductModule
 {
     public record TypeResultDto
     {

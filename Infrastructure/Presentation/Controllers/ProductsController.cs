@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions.Contracts;
 using Shared;
-using Shared.DTOs.NewFolder.ProductModule;
+using Shared.DTOs.ProductModule;
 using Shared.Enums;
 using Shared.ErrorModels;
 using System;

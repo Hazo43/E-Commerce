@@ -3,7 +3,7 @@ using Domain.Contracs;
 using Domain.Entities.BasketModule;
 using Domain.Exceptions;
 using Services.Abstractions.Contracts;
-using Shared.DTOs.NewFolder.BasketModule;
+using Shared.DTOs.BasketModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;
