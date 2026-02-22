@@ -29,7 +29,7 @@ namespace E_Commerce.API
             builder.Services.AddInfrastructureServices(builder.Configuration);
 
             // Core Services ==> AddCoreService Ïí method áæÍÏåÇ áæ ÚæÒÊ ÇÖíİ Çí ÍÊÌå ÇÖíİ İí Çámethod ÚãáÊåÇ İí Core Services Çí ÍÇÌå ÊÈÚ Çá
-            builder.Services.AddCoreService();
+            builder.Services.AddCoreService(builder.Configuration);
 
 
             #endregion

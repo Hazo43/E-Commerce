@@ -1,9 +1,11 @@
 ﻿using Domain.Entities.IdentityModule;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Services.Abstractions.Contracts;
+using Shared.Common;
 using Shared.DTOs.IdentityModule;
 using System;
 using System.Collections.Generic;
@@ -19,10 +21,12 @@ namespace Services.ImplementationService
     public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<User> _userManager;
+        private readonly IOptions<JwtOptions> _options;
 
-        public AuthenticationService( UserManager<User> userManager)
+        public AuthenticationService( UserManager<User> userManager , IOptions<JwtOptions> options)
         {
             _userManager = userManager;
+            _options = options;
         }
         public async Task<UserResultDto> LoginAsync(LoginDTO loginDTO)
         {
@@ -62,6 +66,9 @@ namespace Services.ImplementationService
         // Helper Method 
         private async Task<string> CreateTokenAsync(User user)
         {
+            // Options 
+            var jwtOptions = _options.Value;
+
             // Claims 
             // Name  , Email , Roles 
             var claims = new List<Claim>
@@ -78,14 +85,14 @@ namespace Services.ImplementationService
             // Key ==> b0592a14c6e372883397b6dee7f1f4f7535563de481a9941eeb2d63658328533 
             // Array of bytes دا اللي Key هنروح نحول ال
 
-            var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("b0592a14c6e372883397b6dee7f1f4f7535563de481a9941eeb2d63658328533"));
+            var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey));
 
             // Algorithm Or signInCreds => اللي هنشتغل بيه Algorithm و ال Key  دا بياخد مننا ال
             // SignIngCredentials من الكلاس دا Create Instance لازم عشان نعملو نعمل
             //  اللي هنشتغل بيه Algorithm ال SecurityAlgorithms.HmacSha256 دا
             var signInCreds = new SigningCredentials( Key , SecurityAlgorithms.HmacSha256 );
 
-            var token = new JwtSecurityToken(issuer: "https://localhost:7067", audience: "AngularProject", claims: claims, expires: DateTime.UtcNow.AddDays(30), signingCredentials: signInCreds);
+            var token = new JwtSecurityToken(issuer: jwtOptions.Issuer, audience: jwtOptions.Audience, claims: claims, expires: DateTime.UtcNow.AddDays(jwtOptions.ExpirationInDays), signingCredentials: signInCreds);
             // JwtSecurityTokenHandler من الكلاس دا Create Instance دي عشان اوصل ليها لازم اعمل WriteToken كمان اسمهاMethod محتاج اوصل ل Token عشان اعرف ارجع ال JwtSecurityToken بترجع token و دي Token انا عايز ارجع 
 
             return new JwtSecurityTokenHandler().WriteToken(token);
