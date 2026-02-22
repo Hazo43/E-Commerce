@@ -55,6 +55,8 @@ namespace E_Commerce.API
 
             app.UseHttpsRedirection();
             //
+            app.UseAuthentication();// Step  1
+            app.UseAuthorization(); // step  2 
             app.UseStaticFiles();
             app.MapControllers();
 
