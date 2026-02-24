@@ -26,7 +26,7 @@ namespace Presistence.Repositories
             var IsCreatedOrUpdated = await _database.StringSetAsync(basket.Id, JsonBasket, timeToLive ?? TimeSpan.FromDays(30));
 
             if (IsCreatedOrUpdated == true)
-               return await GetBasketByIdAsync(basket.Id); 
+               return await GetBasketAsync(basket.Id); 
             else
                 return null;
             
@@ -36,7 +36,7 @@ namespace Presistence.Repositories
              => _database.KeyDeleteAsync(id);
         
 
-        public async Task<CustomerBasket?> GetBasketByIdAsync(string id)
+        public async Task<CustomerBasket?> GetBasketAsync(string id)
         {
             var result = await _database.StringGetAsync(id);
             if(result.IsNullOrEmpty)

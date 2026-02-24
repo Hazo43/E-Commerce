@@ -37,7 +37,7 @@ namespace Services.ImplementationService
 
         public async Task<BasketDto> GetBasketAsync(string id)
         {
-           var basket = await _basketRepository.GetBasketByIdAsync(id);
+           var basket = await _basketRepository.GetBasketAsync(id);
             if (basket is null)
                 throw new BasketNotFoundException(id);
             else
