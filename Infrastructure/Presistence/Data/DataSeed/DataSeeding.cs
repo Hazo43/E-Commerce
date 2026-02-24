@@ -1,5 +1,6 @@
 ﻿using Domain.Contracs;
 using Domain.Entities.IdentityModule;
+using Domain.Entities.OrderModule;
 using Domain.Entities.ProductModule;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -73,6 +74,17 @@ namespace Presistence.Data.DataSeed
                     if (Products is not null && Products.Any())
                        await _dbContext.Products.AddRangeAsync(Products);
 
+                }
+                //ل روح اقراء او ضيف الداتا DeliveryMethods لو مفهوش اي
+                if (! _dbContext.DeliveryMethods.Any())
+                {
+                    // بيقرا الداتا
+                    var deliveryData = File.OpenRead("..\\Infrastructure\\Presistence\\Data\\DataSeed\\JsonFile\\delivery.json");
+                    // [List<delivery>] C# Object الي JSON من (delivers) هحول ال
+                    var delivers = await JsonSerializer.DeserializeAsync<List<DeliveryMethod>>(deliveryData);
+                    // بعمل اتشك لو فيه اي داتا حتي لو واحده ع الاقل رو ضيفها
+                    if (delivers is not null && delivers.Any())
+                        await _dbContext.DeliveryMethods.AddRangeAsync(delivers);
                 }
 
                await _dbContext.SaveChangesAsync();
