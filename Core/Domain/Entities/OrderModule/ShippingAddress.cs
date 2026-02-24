@@ -8,6 +8,19 @@ namespace Domain.Entities.OrderModule
 {
     public class ShippingAddress
     {
+        public ShippingAddress()
+        {
+            
+        }
+        public ShippingAddress(string firstName, string lastName, string city, string street, string country)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            City = city;
+            Street = street;
+            Country = country;
+        }
+
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;

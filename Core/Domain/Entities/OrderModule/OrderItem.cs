@@ -8,12 +8,20 @@ namespace Domain.Entities.OrderModule
 {
     public class OrderItem : BaseEntity<Guid>
     {
+        public OrderItem()
+        {
+            
+        }
+        public OrderItem(decimal price, int quantity, ProductInOrderItem product, Order order, int orderId)
+        {
+            Price = price;
+            Quantity = quantity;
+            Product = product;
+        }
+
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public ProductInOrderItem Product { get; set; } 
 
-        // Order -> 1  , OrderItem -> M
-        public Order Order { get; set; } = default!;
-        public int OrderId { get; set; }
     }
 }
