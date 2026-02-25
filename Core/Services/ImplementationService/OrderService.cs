@@ -3,9 +3,12 @@ using Domain.Contracs;
 using Domain.Entities.OrderModule;
 using Domain.Entities.ProductModule;
 using Domain.Exceptions;
+using Microsoft.AspNetCore.SignalR;
 using Services.Abstractions.Contracts;
+using Services.Specifications;
 using Shared.DTOs.OrderModule;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +28,7 @@ namespace Services.ImplementationService
             _unitOfWork = unitOfWork;
             _basketRepository = basketRepository;
         }
+        // Create Order
         public async Task<OrderResultDto> CreateOrderAsync(OrderRequestDto orderRequest, string userEmail)
         {
             // 1] Map From ShippingAddressDto To ShippingAdress
@@ -78,19 +82,34 @@ namespace Services.ImplementationService
            return  _mapper.Map<Order, OrderResultDto>(OrderToCreate);
         }
 
-        public Task<IEnumerable<OrderResultDto>> GetAllOrderByEmailAsync(string userEmail)
+        // Get All Orders By Email
+        public async Task<IEnumerable<OrderResultDto>> GetAllOrderByEmailAsync(string userEmail)
         {
-            throw new NotImplementedException();
+            var orders = await _unitOfWork.GetRepository<Order, Guid>()
+                 .GetAllAsync(new OrderWithIncludesSpecifications(userEmail));
+
+            // OrderResultDto و هو عاوز اللي يرجع Order عباره عن  (order) عشان اللي راجع هنا map انا هعمل 
+            return _mapper.Map <IEnumerable<Order>, IEnumerable<OrderResultDto>>(orders);
+
         }
 
-        public Task<IEnumerable<DeliveryMethodDto>> GetDeliveryMethodsAsync()
+        // Get Delivery Method 
+        public async Task<IEnumerable<DeliveryMethodDto>> GetDeliveryMethodsAsync()
         {
-            throw new NotImplementedException();
+            var deliveryMethod = await _unitOfWork.GetRepository<DeliveryMethod, int>().GetAllAsync();
+            // Map ف عشان كدا عملنا  IEnumerable<DeliveryMethodDto اللي هو عاوزو هو عاوز return مش دا ال  (deliveryMethod) اللي راجع هنا
+            return _mapper.Map<IEnumerable<DeliveryMethod>, IEnumerable<DeliveryMethodDto>>(deliveryMethod);
         }
 
-        public Task<OrderResultDto> GetOrderByIdAsync(Guid id)
+        // Get Order By Id
+        public async Task<OrderResultDto> GetOrderByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var orders = await _unitOfWork.GetRepository<Order, Guid>()
+                   .GetByIdAsync(new OrderWithIncludesSpecifications(id)) ?? throw new OrderNotFoundExceptions(id);
+
+            // OrderResultDto و هو عاوز اللي يرجع Order عباره عن  (order) عشان اللي راجع هنا map انا هعمل 
+            return _mapper.Map<Order , OrderResultDto>(orders);
+        
         }
     }
 }
