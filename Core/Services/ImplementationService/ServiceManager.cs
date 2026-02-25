@@ -24,10 +24,13 @@ namespace Services.ImplementationService
         private readonly Lazy<IProductService> _productService = new Lazy<IProductService>(() => new ProductService(_unitOfWork , _mapper));
         private readonly Lazy<IBasketService> _basketService = new Lazy<IBasketService>(() => new BasketService(_basketRepository, _mapper));
         private readonly Lazy<IAuthenticationService> _authService = new Lazy<IAuthenticationService>(() => new AuthenticationService(_userManager , _option));
+        private readonly Lazy<IOrderService> _orderService = new Lazy<IOrderService>(() => new OrderService(_mapper, _unitOfWork, _basketRepository));
         public IProductService ProductService =>_productService.Value;
        
         public IBasketService BasketService =>_basketService.Value;
         
         public IAuthenticationService AuthenticationService => _authService.Value;
+
+        public IOrderService OrderService =>_orderService.Value;
     }
 }
