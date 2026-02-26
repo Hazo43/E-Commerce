@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Entities.IdentityModule;
 using Domain.Entities.OrderModule;
 using Shared.DTOs.OrderModule;
 using System;
@@ -15,6 +16,9 @@ namespace Services.MappingProfile
         {
             // Shipping Address
             CreateMap<ShippingAddress, ShippingAddressDto>().ReverseMap();
+
+            // map from IdentityAddress To ShippingAddressDto
+            CreateMap<Address, ShippingAddressDto>().ReverseMap();
 
             // Delivery Method
             CreateMap<DeliveryMethod , DeliveryMethodDto>();

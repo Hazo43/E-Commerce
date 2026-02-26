@@ -1,12 +1,15 @@
-﻿using Domain.Entities.IdentityModule;
+﻿using AutoMapper;
+using Domain.Entities.IdentityModule;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Services.Abstractions.Contracts;
 using Shared.Common;
 using Shared.DTOs.IdentityModule;
+using Shared.DTOs.OrderModule;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,12 +25,84 @@ namespace Services.ImplementationService
     {
         private readonly UserManager<User> _userManager;
         private readonly IOptions<JwtOptions> _options;
+        private readonly IMapper _mapper;
 
-        public AuthenticationService( UserManager<User> userManager , IOptions<JwtOptions> options)
+        public AuthenticationService( UserManager<User> userManager , IOptions<JwtOptions> options , IMapper mapper)
         {
             _userManager = userManager;
             _options = options;
+            _mapper = mapper;
         }
+        // Check Email Exist
+        public async Task<bool> CheckEmailExistAsync(string userEmail)
+        {
+           var user = await _userManager.FindByEmailAsync(userEmail);
+            if( user is null)
+                return false;
+            else
+                return true;
+        }
+        // Get Current User
+        public async Task<UserResultDto> GetCurrentUserAsync(string userEmail)
+        {
+            var user = await _userManager.FindByEmailAsync(userEmail);
+            if( user is null)
+                throw new UserNotFoundExceptions(userEmail);
+            
+            return new UserResultDto(user.DisplayName , await CreateTokenAsync(user) , user.Email);
+            
+        }
+        // Get User Address
+        public async Task<ShippingAddressDto> GetUserAddressAsync(string userEmail)
+        {
+            //  specifications عشان انا معنديش Include عن طريق ال user مع ال Address احنا هنا رجعنا ال
+            //  اللي هو باعتو ونرجعهولو userEmail من ال FirstOrDefaultAsync عادي و هنجيب ال Include ف روحنا عملنا
+            var user = await _userManager.Users.Include( user => user.Address)
+                             .FirstOrDefaultAsync( u => u.Email == userEmail);
+
+            // Email يكون معندوش ال user هنعمل اتشك ممكن ال
+            if( user is null )
+                throw new UserNotFoundExceptions(userEmail);
+
+            return _mapper.Map<ShippingAddressDto>(user.Address);
+        }
+        // Update User Address
+        public async Task<ShippingAddressDto> UpdateUserAddressAsync(string userEmail, ShippingAddressDto addressDto)
+        {
+            //  specifications عشان انا معنديش Include عن طريق ال user مع ال Address احنا هنا رجعنا ال
+            //  اللي هو باعتو ونرجعهولو userEmail من ال FirstOrDefaultAsync عادي و هنجيب ال Include ف روحنا عملنا
+            var user = await _userManager.Users.Include(user => user.Address)
+                             .FirstOrDefaultAsync(u => u.Email == userEmail);
+
+            // Email يكون معندوش ال user هنعمل اتشك ممكن ال
+            if (user is null)
+                throw new UserNotFoundExceptions(userEmail);
+
+            //  Update هنعملو null لو مش ب
+            if (user.Address != null)
+            {
+                user.Address.FirstName = addressDto.FirstName;
+                user.Address.LastName = addressDto.LastName;
+                user.Address.City = addressDto.City;
+                user.Address.Country = addressDto.Country;
+                user.Address.Street = addressDto.Street;
+            }
+            // Create اصلا انا هروح اعملو Address هنا بقا لو معندوش
+            else
+            {
+                // map 
+                var address = _mapper.Map<Address>(addressDto);
+                // Create 
+                user.Address = address;
+
+            }
+            // Create هروح بقا اضيف او اعمل
+            await _userManager.UpdateAsync(user);
+            // user  اللي جوا ال navigation Property من ال Map عشان دي هنعوز نعمل  OrderProfile بتاعها جوا ال MapProfile هروح اعمل ال
+            return _mapper.Map<ShippingAddressDto>(user.Address);
+        }
+
+        // Login
         public async Task<UserResultDto> LoginAsync(LoginDTO loginDTO)
         {
            // Check Email Already Exist Or No
@@ -41,7 +116,7 @@ namespace Services.ImplementationService
             // لو عدا من كل دول يبقي روح رجعلو الداتا دي بقا كدا هو تمام معندوش حاجه غلط
             return new UserResultDto(user.DisplayName, await CreateTokenAsync(user), user.Email);
         }
-
+        // Register
         public async Task<UserResultDto> RegisterAsync(RegisterDTO registerDTO)
         {
            var user = new User()
