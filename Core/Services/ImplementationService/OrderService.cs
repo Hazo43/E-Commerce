@@ -60,6 +60,7 @@ namespace Services.ImplementationService
                 };
                 orderitems.Add(orderItem);
             }
+            var orderRepo = _unitOfWork.GetRepository<Order, Guid>();
            
             // 3] GetDeliveryMethod ==>  DeliveryMethodId دي عشان اجيبها محتاج اخد ال
             var deliveryMethod = await _unitOfWork.GetRepository<DeliveryMethod, int>()
@@ -71,11 +72,22 @@ namespace Services.ImplementationService
             // الكميه Quantity في ال Product هيضرب السعر بتاع كل orderitems كلهم من خلال ال Product بتاع ال subTotal دا هيحسب ال
             var subTotal = orderitems.Sum( o => o.Price * o.Quantity);
 
+            // دا مةجود ولا لا paymentIntentId اللي ب ال order عاوز افحص اشوف ال
+            var orderExist = await orderRepo.GetByIdAsync(new OrderWithPaymentIntentIdSpecifications(basket.PaymentIntentId));
+          
+            //  يبقي هو موجود قبل كدا ف هروح امسحوorder لو رجعت orderExist دي
+            if (orderExist != null)
+            {
+                // معاه orderItems يمسح ال Order عشان لما يمسح ال OrderItem من عند ال cascade اعملها orderConfiguration هروح بردو علي ال
+                orderRepo.Delete(orderExist);
+            }
+           
+
             // 5] Create Oblect From Order ==> Parameters هبعتلو ال
-            var OrderToCreate = new Order(userEmail, shippingAddress, orderitems, deliveryMethod, subTotal);
+            var OrderToCreate = new Order(userEmail, shippingAddress, orderitems, deliveryMethod, subTotal , basket.PaymentIntentId);
            
             // DataBase في ال OrderToCreate هروح اضيف ال
-            await _unitOfWork.GetRepository<Order , Guid>().AddAsync(OrderToCreate);
+            await orderRepo.AddAsync(OrderToCreate);
             await _unitOfWork.SaveChangesAsync();
 
             // 6] Map<Order , OrderResult>();

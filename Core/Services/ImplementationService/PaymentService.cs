@@ -33,6 +33,7 @@ namespace Services.ImplementationService
         public async Task<BasketDto> CreateOrUpdatePaymentIntentAsync(string basketId)
         {
             //0] Instal Package ==> Stripe.Net
+            
             //1] Set Up Key [ Secret Key ] 
             // اللي بيكلمك او مين الاكونت اللي بيكلمك Api كدا عرفتو من ال
             StripeConfiguration.ApiKey = _configuration.GetSection("StripeSettings")["SecretKey"];

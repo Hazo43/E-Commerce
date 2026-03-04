@@ -25,7 +25,7 @@ namespace Presistence.Data.Configrations
 
             // Relations With OrderItems
             builder.HasMany(x => x.OrderItems)
-                   .WithOne();
+                   .WithOne().OnDelete(DeleteBehavior.Cascade);
 
             // Relations With DeliveryMethod 
             builder.HasOne(x => x.DeliveryMethod)
