@@ -5,6 +5,7 @@ using Domain.Entities.OrderModule;
 using Domain.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Services.Abstractions.Contracts;
+using Services.Specifications;
 using Shared.DTOs.BasketModule;
 using Stripe;
 using System;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Order = Domain.Entities.OrderModule.Order;
 using Product = Domain.Entities.ProductModule.Product;
 namespace Services.ImplementationService
 {
@@ -164,6 +166,8 @@ namespace Services.ImplementationService
 
         }
 
+
+        #region Helpers Methods
         // Create Or Update PaymentIntent
         private async Task UpdateOrCreatePaymentIntentAsync(CustomerBasket basket, long total)
         {
@@ -242,6 +246,73 @@ namespace Services.ImplementationService
             return await _basketRepository.GetBasketAsync(basketId)
                               ?? throw new BasketNotFoundException(basketId);
         }
+#endregion
+      
+        
+        public async Task UpdatePaymentStatusAsync(string json, string signatureHeader)
+        {
+             string endpointSecret = _configuration.GetSection("StripeSettings")["EndPointSecret"];
+            
+            
+              var stripeEvent = EventUtility.ParseEvent(json , throwOnApiVersionMismatch :false );
 
+
+              stripeEvent = EventUtility.ConstructEvent(json, signatureHeader, endpointSecret , throwOnApiVersionMismatch: false);
+
+              var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+
+            
+              if (stripeEvent.Type == EventTypes.PaymentIntentSucceeded)
+              {
+                // Recieved اللي Pending من Status هغير ال Succeeded هنا هعمل لو الاوردر
+                await UpdatePaymentStatusRecievedAsync(paymentIntent.Id);
+              }
+              else if (stripeEvent.Type == EventTypes.PaymentIntentPaymentFailed)
+              {
+                // Failed اللي Pending من Status هغير ال Failed هنا هعمل لو الاوردر
+                await UpdatePaymentStatusFailedAsync(paymentIntent.Id);
+              }
+
+            else
+            {
+                  Console.WriteLine("Unhandled event type: {0}", stripeEvent.Type);
+            }
+             
+            
+         
+        }
+
+        private async Task UpdatePaymentStatusFailedAsync(string paymentIntentId)
+        {
+            var orderRepo = _unitOfWork.GetRepository<Order, Guid>();
+
+            var order = await orderRepo 
+                  .GetByIdAsync(new OrderWithPaymentIntentIdSpecifications(paymentIntentId));
+          if(order is not null)
+          {
+                //   معناها انو فشل الاوردر PaymentFailed روح خلي الاوردر Failed كدا بعرفو ان هو لو الاوردر
+                order.OrderPaymentStatus = OrderPaymentStatus.PaymentFailed;
+                // Failed ان الاوردر  Update هيروح يعمل
+                orderRepo.Update(order);
+                await _unitOfWork.SaveChangesAsync(); // هياكد في الداتا بيز
+          }
+        }
+
+        private async Task UpdatePaymentStatusRecievedAsync(string paymentIntentId)
+        {
+            var orderRepo = _unitOfWork.GetRepository<Order, Guid>();
+          
+            var order = await orderRepo
+                 .GetByIdAsync(new OrderWithPaymentIntentIdSpecifications(paymentIntentId));
+      
+            if(order is not null)
+            {
+                // تم الاستلام يعني PaymentReceived روح خلي الاوردر Succeeded كدا بعرفو ان هو لو الاوردر
+                order.OrderPaymentStatus = OrderPaymentStatus.PaymentReceived;
+                // ان الاوردر تم Update هيروح يعمل
+                orderRepo.Update(order);
+                await _unitOfWork.SaveChangesAsync(); // هياكد في الداتا بيز
+            }
+        }
     }
 }
