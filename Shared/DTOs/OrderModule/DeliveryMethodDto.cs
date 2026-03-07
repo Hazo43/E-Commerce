@@ -12,6 +12,6 @@ namespace Shared.DTOs.OrderModule
         public string ShortName { get; set; } = default!;
         public string Description { get; init; } = default!;
         public string DeliveryTime { get; init; } = default!;
-        public decimal Price { get; init; }
+        public decimal Cost { get; init; }
     }
 }

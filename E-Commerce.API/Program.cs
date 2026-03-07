@@ -23,7 +23,7 @@ namespace E_Commerce.API
             var builder = WebApplication.CreateBuilder(args);
 
             // WepApi Services ==> WepApiServices Ïí method áæÍÏåÇ áæ ÚæÒÊ ÇÖíİ Çí ÍÊÌå ÇÖíİ İí Çámethod ÚãáÊåÇ İí WepApi Services Çí ÍÇÌå ÊÈÚ Çá
-            builder.Services.WepApiServices();
+            builder.Services.WepApiServices(builder.Configuration);
 
             // Infrastructure Services ==> AddInfrastructureServices Ïí method áæÍÏåÇ áæ ÚæÒÊ ÇÖíİ Çí ÍÊÌå ÇÖíİ İí Çámethod ÚãáÊåÇ İí Infrastructure Services Çí ÍÇÌå ÊÈÚ Çá
             builder.Services.AddInfrastructureServices(builder.Configuration);
@@ -58,6 +58,8 @@ namespace E_Commerce.API
             app.UseAuthentication();// Step  1
             app.UseAuthorization(); // step  2 
             app.UseStaticFiles();
+            // 
+            app.UseCors("CorsPolicy");
             app.MapControllers();
 
             #endregion

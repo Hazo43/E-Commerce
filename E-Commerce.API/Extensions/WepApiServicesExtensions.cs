@@ -6,9 +6,29 @@ namespace E_Commerce.API.Extensions
 {
     public static class WepApiServicesExtensions
     {
-        public static IServiceCollection WepApiServices (this IServiceCollection services)
+        public static IServiceCollection WepApiServices (this IServiceCollection services , IConfiguration _configuration)
         {
             services.AddControllers();
+            // 
+            var frontUrl = _configuration.GetSection("URLs")["FrontUrl"];
+            services.AddCors(options =>
+            {
+                //0]  server يعني السماح لموقع مختلف انه يطلب بيانات من ال AddCors دي
+
+                //1] AllowAnyHeader() ==> Frontend بييجي من ال HTTP Header ده معناه إن السيرفر يسمح بأي  
+                // مثال Headers: => (Accept , Authorization , Content-Type)
+
+                //2] AllowAnyMethod() ==> HTTP Requests => (Get , Post , Delete , Put) ده معناه السماح بكل أنواع 
+
+                //3]  API بنتحدد الموقع المسموح ليه بس انه يتصل ب ال WithOrigins دي 
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyHeader().AllowAnyMethod()
+                           .WithOrigins(frontUrl); // http://localhost:4200  Appsetting هفصلو ف ال
+
+                });
+
+            });
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen( options =>
             {

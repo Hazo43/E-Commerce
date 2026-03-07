@@ -9,7 +9,7 @@ namespace Shared.DTOs.OrderModule
     public record OrderRequestDto
     {
         public string BasketId { get; init; } = string.Empty;
-        public ShippingAddressDto ShippingAddress  { get; init; }
+        public ShippingAddressDto ShipToAddress  { get; init; }
         public int DeliveryMethodId { get; init; }
     }
 }

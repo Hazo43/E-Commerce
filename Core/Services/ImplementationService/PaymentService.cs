@@ -204,7 +204,7 @@ namespace Services.ImplementationService
         // Calculate Total 
         private long CalculateTotalAsync(CustomerBasket basket)
         {
-             var total = (long)(basket.BasketItems.Sum(i => i.Quantity * i.Price) + basket.ShippingPrice) * 100;
+             var total = (long)(basket.Items.Sum(i => i.Quantity * i.Price) + basket.ShippingPrice) * 100;
              return total;
         }
 
@@ -213,7 +213,7 @@ namespace Services.ImplementationService
         /// </summary>
         private async Task ValidateBasketAsync(CustomerBasket basket)
         {
-            foreach (var item in basket.BasketItems)
+            foreach (var item in basket.Items)
             {
                 // client  مش اللي مبعوت في السله او اللي باعتو ال database عشان اجيب السعر الحقيقي بتاعو من ال product انا جبت ال
                 var product = await _unitOfWork.GetRepository<Product, int>().GetByIdAsync(item.Id)
@@ -224,12 +224,13 @@ namespace Services.ImplementationService
             }
 
             // ShippingPrice مش هعمل فحص بقا ع ال Value عشان هيه لو مفهاش  Exception هرجعلو Value لو مفهاش  DeliveryMethofId دي بتعمل فحص بتشوف ال
-            if (!basket.DeliveryMethoId.HasValue) throw new Exception(" No Delivery Method Selected");
+            if (!basket.DeliveryMethodId.HasValue) 
+                  throw new Exception(" No Delivery Method Selected");
 
             // هروح بقا اجيبها DeliveryMethoId لو هو مختار 
             var deliveryMethod = await _unitOfWork.GetRepository<DeliveryMethod, int>()
-                  .GetByIdAsync(basket.DeliveryMethoId.Value)
-                  ?? throw new DeliveryMethodNotFountExceptions(basket.DeliveryMethoId.Value);
+                  .GetByIdAsync(basket.DeliveryMethodId.Value)
+                  ?? throw new DeliveryMethodNotFountExceptions(basket.DeliveryMethodId.Value);
 
             // --- DB لانها جايه من ال DeliveryMethod.price ان هو ياخدها من ال shippingPrice ل القيمه بتاع set هروح بقا اعمل
             basket.ShippingPrice = deliveryMethod.Price;

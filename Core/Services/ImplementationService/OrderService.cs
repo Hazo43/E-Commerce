@@ -32,7 +32,7 @@ namespace Services.ImplementationService
         public async Task<OrderResultDto> CreateOrderAsync(OrderRequestDto orderRequest, string userEmail)
         {
             // 1] Map From ShippingAddressDto To ShippingAdress
-            var shippingAddress = _mapper.Map<ShippingAddressDto, ShippingAddress>(orderRequest.ShippingAddress);
+            var shippingAddress = _mapper.Map<ShippingAddressDto, ShippingAddress>(orderRequest.ShipToAddress);
            
             // 2] GetOrderItem ==> Id ومنها هجيب ال BaskeItem ومنها هجيب ال Basket عن طريقو هروح اجيب ال request اللي جوا ال BasketId ف محتاج اوصل ل
             var basket = await _basketRepository.GetBasketAsync(orderRequest.BasketId);
@@ -41,7 +41,7 @@ namespace Services.ImplementationService
             //
             List<OrderItem> orderitems = new List<OrderItem>();
 
-            foreach (var item in basket.BasketItems)
+            foreach (var item in basket.Items)
             {
                 // BasketItems عن طريق ال Id ب ال product هنا جبنا ال
                 //  عشان نعمل اتشك علي السعر product احنا جبنا ال
