@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Services.ImplementationService
 {
-    internal class OrderService : IOrderService
+    public class OrderService : IOrderService
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
