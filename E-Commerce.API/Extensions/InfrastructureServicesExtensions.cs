@@ -41,6 +41,8 @@ namespace E_Commerce.API.Extensions
                return ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection")!);
             });
             services.AddScoped<IBasketRepository, BasketRepository>();
+            // CacheRepository 
+            services.AddScoped<ICacheRepository, CacheRepository>();
             // User Identity Role 
             services.AddIdentityCore<User>( options =>
             {

@@ -12,7 +12,8 @@ namespace Services.ImplementationService
          Func<IBasketService> _basketFactory , 
          Func<IAuthenticationService> _authenticationFactory , 
          Func<IOrderService> _orderFactory , 
-         Func<IPaymentService> _paymentFactory) : IServiceManager
+         Func<IPaymentService> _paymentFactory , 
+         Func<ICacheService> _cacheFactory) : IServiceManager
     {
         public IProductService ProductService => _productFactory.Invoke();
 
@@ -23,5 +24,6 @@ namespace Services.ImplementationService
         public IOrderService OrderService => _orderFactory.Invoke();
 
         public IPaymentService PaymentService => _paymentFactory.Invoke();
+        public ICacheService CacheService => _cacheFactory.Invoke();
     }
 }

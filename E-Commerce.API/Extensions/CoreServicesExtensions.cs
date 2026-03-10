@@ -38,6 +38,11 @@ namespace E_Commerce.API.Extensions
             services.AddScoped<Func<IPaymentService>>(provider =>
             () => provider.GetRequiredService<IPaymentService>()
             );
+            // ICache Service
+            services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<Func<ICacheService>>(provider =>
+            () => provider.GetRequiredService<ICacheService>()
+            );
             // JwtOptions
             services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
             return services;
