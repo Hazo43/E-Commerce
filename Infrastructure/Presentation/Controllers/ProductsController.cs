@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Attributes;
 using Services.Abstractions.Contracts;
 using Shared;
 using Shared.DTOs.ProductModule;
@@ -22,9 +23,11 @@ namespace Presentation.Controllers
         {
             _serviceManager = serviceManager;
         }
-    
+
         // EndPoint => Get AllProduct 
         // Get : BaseUrl/api/Products
+
+        [RadisCache(120)]
         [HttpGet]
         public async Task<ActionResult<PaginatedResult<ProductResultDto>>> GetAllProductAsync([FromQuery]ProductSpecificationsParameters parameters)
         {
