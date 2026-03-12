@@ -63,7 +63,6 @@ namespace Presentation.Attributes
            
         
         }
-
         private string GenerateKey(HttpRequest request)
         {
             //1] String Variable ==> Add Path /api/Product
