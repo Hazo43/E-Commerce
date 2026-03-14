@@ -34,18 +34,20 @@ namespace Presentation.Controllers
             var products = await _serviceManager.ProductService.GetAllProductsAsync(parameters);
             return Ok(products);
         }
-    
+
         // EndPoint => Get AllBrands
         // Get : BaseUrl/api/Products/Brands
+   
         [HttpGet("Brands")]
         public async Task<ActionResult<IEnumerable<BrandResultDto>>> GetAllBrandsAsync()
         {
             var brands = await _serviceManager.ProductService.GetAllBrandsAsync();
             return Ok(brands);
         }
-       
+
         // EndPoint => Get AllTypes
         // Get : BaseUrl/api/Products/Types
+ 
         [HttpGet("Types")]
         public async Task<ActionResult<IEnumerable<TypeResultDto>>> GetAllTypesAsync()
         {
@@ -56,6 +58,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(ProductResultDto), StatusCodes.Status200OK)]
         // EndPoint => Get ProductById
         // Get : BaseUrl/api/Products/Id
+     
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ProductResultDto>> GetProductByIdAsync(int id)
         {
