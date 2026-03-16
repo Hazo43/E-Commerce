@@ -134,8 +134,8 @@ namespace Presistence.Data.DataSeed
                 }
 
 
-            }
-            catch (Exception ex)
+             }
+             catch (Exception ex)
              {
                 throw;
              }
