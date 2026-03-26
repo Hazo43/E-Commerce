@@ -58,7 +58,7 @@ namespace Presentation.Attributes
                 // مهم
                 // value ال okObjResult دي
                 //  دقيقتين default قد اي و لو مبعتش انا حاطيت ال cache يبعت معاها المده هيه هتتعملها RadisCacheعشان اللي هيستخدم ال class انا معرفه فوق ف ال durationInSeconds دي 
-                await cacheService.SetCacheValueAsync(Key, okObjResult, TimeSpan.FromSeconds(durationInSeconds));
+                await cacheService.SetCacheValueAsync(Key, okObjResult.Value, TimeSpan.FromSeconds(durationInSeconds));
             }
            
         
