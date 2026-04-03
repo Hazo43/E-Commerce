@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Services.Specifications
 {
-    internal class ProductWithTypeAndBrandSpecifications : BaseSpecifications<Product , int>
+    public class ProductWithTypeAndBrandSpecifications : BaseSpecifications<Product , int>
     {
         // Get All Product => Include (ProductType , ProductBrand)
-        public ProductWithTypeAndBrandSpecifications(ProductSpecificationsParameters parameters)
+        public ProductWithTypeAndBrandSpecifications(ProductSpecificationsParameters parameters , bool forDashboard = false)
             : base( p => (!parameters.typeId.HasValue || p.TypeId == parameters.typeId) &&  // type
                          (!parameters.brandId.HasValue || p.BrandId == parameters.brandId) && // brand
                          ( string.IsNullOrEmpty(parameters.Search) || p.Name.ToLower().Contains(parameters.Search.ToLower())))  // Search
@@ -40,7 +40,8 @@ namespace Services.Specifications
             }
 
             // Pagination 
-            ApplyPagination(parameters.pageSize, parameters.PageIndex);
+            if(!forDashboard) // products عشان هناك هنعرض كل ال Dashboard في ال Pagination كدا بقولو متعملش 
+                ApplyPagination(parameters.pageSize, parameters.PageIndex);
         }
 
         // Get Product By Id (int id ) => Include Type , Brand [Include] . Where [Crietria]

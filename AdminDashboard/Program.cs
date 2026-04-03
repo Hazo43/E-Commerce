@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.Contracs;
 using Domain.Entities.IdentityModule;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Hosting;
 using Presistence.Data.Dbcontexts;
 using Presistence.Identity.DbContext;
+using Presistence.UnitOfWork;
 using StackExchange.Redis;
 using Stripe;
 using System;
@@ -47,6 +49,9 @@ namespace AdminDashboard
                 options.Password.RequireUppercase = true;
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<IdentityStoreDbContext>().AddDefaultTokenProviders();
+
+            // UnitOfWork
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 
